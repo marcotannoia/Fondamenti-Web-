@@ -1,0 +1,4 @@
+-	Creato repo 
+-	Creato account mongo db
+-	Impostato architettura dividendo le folder in frontend  e backend
+-	Installato react ( ci ha fornito app.jsx , index.jsx ecc) 
