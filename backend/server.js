@@ -1,25 +1,18 @@
-require('dotenv').config(); // Carica le variabili dal file .env
 const express = require('express');
+const mongoose = require('mongoose');
 const cors = require('cors');
-const connectDB = require('./config/db');
+require('dotenv').config();
+
+const authRoutes = require('./routes/authRoutes'); // definisci qui i path per /login e /register
 
 const app = express();
-
-// Connessione al Database
-connectDB();
-
-// Middleware base
+app.use(express.json());
 app.use(cors());
-app.use(express.json()); // Necessario per leggere il corpo delle richieste (body)
 
-// TODO: Qui importeremo e useremo le rotte (es. app.use('/api/auth', authRoutes);)
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB connesso"))
+  .catch(err => console.log(err));
 
-// Rotta base di test
-app.get('/', (req, res) => {
-  res.send('Il server è attivo e la struttura è pronta!');
-});
+app.use('/api/auth', authRoutes);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server in ascolto sulla porta ${PORT} ⚡`);
-});
+app.listen(5000, () => console.log("Server in esecuzione sulla porta 5000"));
