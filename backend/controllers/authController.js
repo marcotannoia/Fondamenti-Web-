@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 exports.register = async (req, res) => {
   try {
     const { email, password } = req.body; // prendo i parametri email e password dal json
-    const newUser = new User({ email, password }); // creo un nuovo utente con questi deu parametri e gli viene associato un ID da MONGODB
+    const newUser = new User({ email, password, role: "user"}); // creo un nuovo utente con questi deu parametri e gli viene associato un ID da MONGODB
     await newUser.save(); // aspetto il salvataggio dell utente
     res.status(201).json({ message: "Utente registrato" }); // e vedo se tutto e andato bene o no
   } catch (err) {
