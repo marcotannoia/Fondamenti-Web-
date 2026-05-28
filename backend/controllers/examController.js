@@ -1,5 +1,6 @@
 // gli permetto di ricercalo 
 const Exam = require('../models/Exams');
+const axios = require('axios');
 
 exports.getExamByName = async (req, res) => {
   try {
@@ -65,4 +66,28 @@ exports.insertExam = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Errore durante l'inserimento", error });
     }
+};
+
+exports.getExamData = async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    const axiosConfig = {
+        headers: {
+            'Authorization': authHeader
+        }
+    };
+    const { examName } = req.body;
+   const listRes = await axios.get(`${process.env.ESSE3_URL}/calesa-service-v1/appelli?fields=cdsDefAppId,adDefAppId,adDes`, axiosConfig); // prendo gli esami
+    const esame = listRes.data.find((app) => app.adDes.trim().toLowerCase() === examName.trim().toLowerCase()); // confronto
+
+    if (!esame) return res.status(404).json({ error: "Esame non trovato" }); 
+
+    const dateRes = await axios.get(`${process.env.ESSE3_URL}/calesa-service-v1/appelli/${esame.cdsDefAppId}/${esame.adDefAppId}/?fields=dataInizioApp,adDes`, axiosConfig); //qui prendo gli appelli di quell esame
+    
+    // doppio check
+    res.status(200).json({esame: esame.adDes, appelli: dateRes.data});
+
+  } catch (error) {
+    res.status(500).json({ message: "Errore durante il recupero dei dati" });
+  }
 };

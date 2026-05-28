@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const axios = require('axios');
 
 exports.register = async (req, res) => {
   try {
@@ -28,3 +29,14 @@ exports.login = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.loginCineca = async (req, res) => {
+  try { 
+    const { username, password } = req.body; 
+    const authHeader = 'Basic ' + Buffer.from(`${username}:${password}`).toString('base64');
+    const response = await axios.get(`${process.env.ESSE3_URL}/login`, { headers: { 'Authorization': authHeader }});
+    res.status(200).json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: "Credenziali non valide" });
+  } 
+}

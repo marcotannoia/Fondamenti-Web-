@@ -12,4 +12,6 @@ router.post('/:examId/review', authMiddleware, examController.addReview);
 // Inserimento Admin
 router.post('/add', authMiddleware, examController.insertExam);
 
+router.post('/search', examController.getExamData);
+
 module.exports = router;

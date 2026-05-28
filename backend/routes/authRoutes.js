@@ -20,5 +20,7 @@ router.get('/me', authMiddleware, (req, res) => {
     res.json({ message: "Accesso consentito alla rotta protetta", user: req.user });
 });
 
+
+router.post('/login-cineca', authController.loginCineca);
 // Esportiamo il router in modo che server.js possa importarlo e usarlo
 module.exports = router;
