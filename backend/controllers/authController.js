@@ -22,8 +22,14 @@ exports.login = async (req, res) => {
     const match_pw = await bcrypt.compare(password, user.password); 
     if (!match_pw) return res.status(400).json({ error: "Password errata" }); 
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' }); 
-    res.json({ token, user: { id: user._id, email: user.email } }); //risposta: token, id user e email 
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' }); //creo il token che dura una sett
+    res.cookie('token', token, {
+       httpOnly: true,
+       secure: false,
+       sameSite: 'lax',
+       maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+    res.json({ user: { id: user._id, email: user.email } }); //risposta: id user e email | ho tolto il token, lo carico dal middleware con il cookie 
   } catch (err) {
     res.status(500).json({ error: "Errore, riprovare" });
   }

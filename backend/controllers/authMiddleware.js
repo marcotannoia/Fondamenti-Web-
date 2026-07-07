@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken'); // lo usiamo per convalidare jwt
 
 module.exports = (req, res, next) => {
-  const token = req.header('Authorization')?.split(' ')[1]; // header... Auth : Bearer TOKEN, con [1] prendo il token 
+  const token = req.cookies?.token; //p raticamente non lo sto piu prenndedo dalla risposta ma direttamente dal cookie
   if (!token) return res.status(401).json({ error: "Accesso negato" }); // se non esiste
 
   try {
