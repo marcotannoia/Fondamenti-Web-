@@ -18,10 +18,10 @@ export default function Dashboard() {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/api/dati-protetti", {
+      const response = await fetch("http://localhost:5000/api/autenticazione/me", {
         method: "GET",
         headers: {
-          "Authorization": `Bearer ${token}` // Inviamo il token recuperato da Cognito
+          "Authorization": `Bearer ${token}` // Inviamo il token JWT al backend
         }
       });
 
