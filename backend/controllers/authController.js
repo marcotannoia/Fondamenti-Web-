@@ -22,7 +22,7 @@ exports.login = async (req, res) => {
     const match_pw = await bcrypt.compare(password, user.password); 
     if (!match_pw) return res.status(400).json({ error: "Password errata" }); 
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' }); //creo il token che dura una sett
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' }); //creo il token che dura una sett, serve cookie parser per o per leggere i cookie ricevuti dal btowser, cioe la res
     res.cookie('token', token, {
        httpOnly: true,
        secure: false,
@@ -45,3 +45,16 @@ exports.loginCineca = async (req, res) => { // in questa funzione facciamo da po
     res.status(error.response?.status || 500).json({ error: "Credenziali non valide" });
   } 
 }
+
+//gestiamo adesso il cookie del consenso
+
+exports.cookieConenso = (req, res) => {
+  res.cookie("consensoCookie", "accepted", {
+    httpOnly: false, // deve accedere il frontend per cui non per forza protocllo http
+    secure: false, // non serve https
+    sameSite: 'lax', // per evitare problemi di cors
+    maxAge: 365 * 24 * 60 * 60 * 1000 // un anno
+  });
+
+  res.json({ message : "Consenso cookie salvato" });
+};
