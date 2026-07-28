@@ -46,6 +46,33 @@ exports.aggiuntaRecensione = async (req, res) => {
     }
 };
 
+exports.ricercaEsame = async (req,res) => { // funzione di ricerca esame
+    try { 
+        const nome = req.query.nome; 
+        if (!nome) { // chiedo di inserire un esame
+            return res.status(400).json({
+                message : "Inserire un esame"
+            })
+        }
+
+        const esame = await Esame.FindOne({nome}) // con mongoose lo cerco
+        if (!esame) { 
+            return res.status(404).json({ 
+                message: "Esame non trovato"
+            })
+        } else { 
+            return res.status(200).json({
+                _id: esame._id,
+                nome: esame.nome
+            })
+        }
+    } catch (err)  {
+        return res.status(500).json({
+            message: "Errore generico"
+        })
+    }
+}
+
 // SOLO PER ADMIN
 exports.inserimentoEsame  = async (req, res) => {
     try {
