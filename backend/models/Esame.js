@@ -17,7 +17,10 @@ const SchemaEsame = new mongoose.Schema({
     descrizione: { type: String, required: true },
     professore: { type: String, required: true },
     recensioni: [SchemaRecensione] ,
-    corsoDiStudi: { type: String, required: true }
+    corsoDiStudi: { type: String, required: true },
+    tempo_di_studio_settimane: {type: String, required: true},
+    tempi_di_correzione : { type: Number, required: true },
+    difficolta: { type: Number, min: 1, max: 5, required: true }
 });
 
 //esporto 

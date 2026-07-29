@@ -64,6 +64,20 @@
   background-color: #00766c;
 }
 
+.search-bar button:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.search-area__errore {
+  margin-top: 14px;
+
+  color: #b91c1c;
+
+  font-size: 15px;
+  text-align: center;
+}
+
 @media (max-width: 600px) {
   .search-bar {
     gap: 8px;

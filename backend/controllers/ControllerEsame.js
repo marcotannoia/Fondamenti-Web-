@@ -2,17 +2,6 @@
 const Esame = require('../models/Esame');
 const axios = require('axios');
 
-exports.cercaEsame = async (req, res) => {
-  try {
-    const { nome } = req.params; 
-    const exam = await Esame.findOne({ nome });
-    if (!exam) return res.status(404).json({ error: "Esame non trovato" });
-    res.json(exam);
-  } catch (err) {
-    res.status(500).json({ error: "Errore generico, riprovare. " });
-  }
-};
-
 exports.aggiuntaRecensione = async (req, res) => {
     try {
         const { idEsame } = req.params; // anche se non lo ho nello schema comunque sia mongo me ne assegna 1 
@@ -46,32 +35,37 @@ exports.aggiuntaRecensione = async (req, res) => {
     }
 };
 
-exports.ricercaEsame = async (req,res) => { // funzione di ricerca esame
-    try { 
-        const nome = req.query.nome; 
-        if (!nome) { // chiedo di inserire un esame
+exports.ricercaEsame = async (req, res) => {
+    try {
+        const nome = req.query.nome?.trim();
+
+        if (!nome) {
             return res.status(400).json({
-                message : "Inserire un esame"
-            })
+                message: "Inserire un esame"
+            });
         }
 
-        const esame = await Esame.FindOne({nome}) // con mongoose lo cerco
-        if (!esame) { 
-            return res.status(404).json({ 
+        const esame = await Esame
+            .findOne({ nome })
+            .collation({
+                locale: 'it',
+                strength: 2
+            });
+
+        if (!esame) {
+            return res.status(404).json({
                 message: "Esame non trovato"
-            })
-        } else { 
-            return res.status(200).json({
-                _id: esame._id,
-                nome: esame.nome
-            })
+            });
         }
-    } catch (err)  {
+
+        return res.status(200).json(esame);
+    } catch (err) {
         return res.status(500).json({
             message: "Errore generico"
-        })
+        });
     }
-}
+};
+
 
 // SOLO PER ADMIN
 exports.inserimentoEsame  = async (req, res) => {
@@ -93,26 +87,3 @@ exports.inserimentoEsame  = async (req, res) => {
     }
 };
 
-exports.ottieniDataEsame = async (req, res) => {
-  try {
-    const authHeader = req.headers.authorization; // prendo la richiesta
-    const axiosConfig = {
-        headers: {
-            'Authorization': authHeader // e costruisco una richietsas
-        }
-    };
-    const { nomeEsame } = req.body;
-   const listaTuttiEsami = await axios.get(`${process.env.ESSE3_URL}/calesa-service-v1/appelli?fields=cdsDefAppId,adDefAppId,adDes`, axiosConfig); // prendo TUTTI gli esami
-    const esame = listaTuttiEsami.data.find((app) => app.adDes.trim().toLowerCase() === nomeEsame.trim().toLowerCase()); // prendo solamente quello
-
-    if (!esame) return res.status(404).json({ error: "Esame non trovato" }); 
-
-    const dateEsame = await axios.get(`${process.env.ESSE3_URL}/calesa-service-v1/appelli/${esame.cdsDefAppId}/${esame.adDefAppId}/?fields=dataInizioApp,adDes`, axiosConfig); //qui prendo le date di quell esame
-    
-    // doppio check
-    res.status(200).json({esame: esame.adDes, appelli: dateEsame.data}); // date ricevute
-
-  } catch (error) {
-    res.status(500).json({ message: "Errore durante il recupero dei dati" }); //errore
-  }
-};

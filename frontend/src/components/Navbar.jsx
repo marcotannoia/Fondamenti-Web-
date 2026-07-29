@@ -1,10 +1,17 @@
 import './Navbar.css';
+import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
+  const naviga = useNavigate(); 
+
+  function tornaAllaHome() { 
+    naviga('/')
+  }
+
   return (
     <nav className="navbar" aria-label="Navigazione principale">
       <a
-        href="#home"
+        onClick={tornaAllaHome}
         className="navbar__link"
         aria-label="Torna alla home"
         title="Home"

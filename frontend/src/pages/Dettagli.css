@@ -1,0 +1,60 @@
+.pagina-dettagli {
+  min-height: 100vh;
+  padding: 70px 20px;
+  color: #0f172a;
+  background-color: #f8fafc;
+}
+
+.dettagli {
+  max-width: 800px;
+  margin: auto;
+}
+
+.dettagli__indietro {
+  margin-bottom: 20px;
+  padding: 8px;
+  color: #008f83;
+  background: none;
+  border: 1px solid #008f83;
+  cursor: pointer;
+}
+
+.scheda-esame {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.caratteristica,
+.sezione-recensioni {
+  padding: 16px;
+  background-color: white;
+  border: 1px solid #008f83;
+}
+
+.caratteristica p {
+  margin-top: 6px;
+}
+
+.caratteristica--titolo h1 {
+  margin-top: 6px;
+  color: #008f83;
+}
+
+.sezione-recensioni {
+  margin-top: 20px;
+}
+
+.sezione-recensioni h2 {
+  margin-bottom: 12px;
+}
+
+.recensione {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+}
+
+.recensione p {
+  margin-top: 6px;
+}

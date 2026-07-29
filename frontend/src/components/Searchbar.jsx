@@ -1,11 +1,45 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import './Searchbar.css';
+
+const URL_RICERCA =
+  `${process.env.REACT_APP_API_URL}/api/esami/ricerca-esame`;
 
 export default function SearchBar() {
   const [testo, setTesto] = useState('');
+  const naviga = useNavigate();
 
-  function gestisciRicerca(event) {
+  async function gestisciRicerca(event) {
     event.preventDefault();
+
+    const nomeEsame = testo.trim();
+
+    if (!nomeEsame) {
+      alert('Inserisci il nome di un esame.');
+      return;
+    }
+
+    try {
+      const risposta = await fetch(
+        `${URL_RICERCA}?nome=${encodeURIComponent(nomeEsame)}`
+      );
+
+      const dati = await risposta.json();
+
+      if (!risposta.ok) {
+        alert(dati.message);
+        return;
+      }
+
+      naviga('/dettagli', {
+        state: {
+          esame: dati
+        }
+      });
+    } catch {
+      alert('Impossibile contattare il server.');
+    }
   }
 
   return (
