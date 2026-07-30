@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import LandingPage from './pages/Landing';
 import Dettagli from './pages/Dettagli';
+import Login from './pages/Login';
 import Navbar from './components/Navbar';
 
 function App() {
@@ -11,18 +12,21 @@ function App() {
       <Navbar />
 
       <Routes>
+  <Route
+    path="/"
+    element={<LandingPage />}
+  />
 
-        <Route //rotta landing
-          path="/"
-          element={<LandingPage />}/>
+  <Route
+    path="/dettagli"
+    element={<Dettagli />}
+  />
 
-          <Route // rotta dettagli
-          path="/dettagli"
-          element={<Dettagli />}
-        />
-// rotte di autenticazione
-
-      </Routes>
+  <Route
+    path="/login"
+    element={<Login />}
+  />
+</Routes>
     </>
   );
 }
