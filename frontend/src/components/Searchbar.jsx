@@ -1,17 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import './Searchbar.css';
 
-const URL_RICERCA =
-  `${process.env.REACT_APP_API_URL}/api/esami/ricerca-esame`;
+const URL_RICERCA =`${process.env.REACT_APP_API_URL}/api/esami/ricerca-esame`;
 
 export default function SearchBar() {
   const [testo, setTesto] = useState('');
   const naviga = useNavigate();
 
   async function gestisciRicerca(event) {
-    event.preventDefault();
+    event.preventDefault()  ;
 
     const nomeEsame = testo.trim();
 

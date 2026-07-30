@@ -35,20 +35,43 @@ exports.login = async (req, res) => {
   }
 };
 
-exports.loginCineca = async (req, res) => { // in questa funzione facciamo da ponte
-  try { 
-    const { username, password } = req.body; 
-    const authHeader = 'Basic ' + Buffer.from(`${username}:${password}`).toString('base64'); // cineca accetta auth base64 con autenticazione basic
-    const risposta = await axios.get(`${process.env.ESSE3_URL}/login`, { headers: { 'Authorization': authHeader }}); // chiamata http a quell endpoint con quell header
-    res.status(200).json(risposta.data); // cineca ha risposto OK 
-  } catch (error) {
-    res.status(error.response?.status || 500).json({ error: "Credenziali non valide" });
-  } 
+export async function verificaCineca(username, password) {
+  const credenziali = `${username}:${password}`;
+  const authHeader =
+    'Basic ' +
+    Buffer.from(credenziali).toString('base64');
+  const risposta = await axios.get(`${process.env.ESSE3_URL}/login`,
+    {
+      headers: {
+        Authorization: authHeader
+      }
+    }
+  );
+
+  return risposta.data; 
 }
 
+exports.loginCineca = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    const datiCineca = await verificaCineca(
+      username,
+      password
+    );
+
+    return res.status(200).json(datiCineca);
+  } catch (error) {
+    return res
+      .status(error.response?.status || 500)
+      .json({
+        error: 'Credenziali Cineca non valide'
+      });
+  }
+};
 //gestiamo adesso il cookie del consenso
 
-exports.cookieConenso = (req, res) => {
+exports.cookieConenso = async (req, res) => {
   res.cookie("consensoCookie", "accepted", {
     httpOnly: false, // deve accedere il frontend per cui non per forza protocllo http
     secure: false, // non serve https

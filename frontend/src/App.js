@@ -11,15 +11,17 @@ function App() {
       <Navbar />
 
       <Routes>
-        <Route
-          path="/"
-          element={<LandingPage />}
-        />
 
-        <Route
+        <Route //rotta landing
+          path="/"
+          element={<LandingPage />}/>
+
+          <Route // rotta dettagli
           path="/dettagli"
           element={<Dettagli />}
         />
+// rotte di autenticazione
+
       </Routes>
     </>
   );

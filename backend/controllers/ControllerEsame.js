@@ -1,37 +1,68 @@
 // gli permetto di ricercalo 
 const Esame = require('../models/Esame');
 const axios = require('axios');
+import { loginCineca } from './authController';
 
 exports.aggiuntaRecensione = async (req, res) => {
     try {
-        const { idEsame } = req.params; // anche se non lo ho nello schema comunque sia mongo me ne assegna 1 
-        const { difficolta, tempo_di_studio_settimane , tempi_di_correzione, commento } = req.body;
-        
-        const userId = req.user.id; 
+        const { idEsame } = req.params;
+        const {
+            usernameCineca,
+            passwordCineca,
+            difficolta,
+            tempo_di_studio_settimane,
+            tempi_di_correzione,
+            commento
+        } = req.body;
 
-        const esameAggiornato = await Esame.findByIdAndUpdate( // ha 3 parametri: cosa modifica, come lo modifica, come te lo consegna
-            idEsame,
-            {
-                $push: { // metodo di mongo, serve per inserire qualcosa
-                    recensioni: {
-                        userId,
-                        difficolta,
-                        tempo_di_studio_settimane,
-                        tempi_di_correzione,
-                        commento
-                    }
-                }
-            },
-            { new: true } // Restituisce l'esame aggiornato
-        );
-
-        if (!esameAggiornato) {
-            return res.status(404).json({ message: "Esame non trovato" });
+        try {
+            await verificaCineca(
+                usernameCineca,
+                passwordCineca
+            );
+        } catch {
+            return res.status(401).json({
+                message: "Credenziali Cineca non valide"
+            });
         }
 
-        res.status(200).json({ message: "Recensione inserita con successo", esame: esameAggiornato });
-    } catch (error) {
-        res.status(500).json({ message: "Errore durante l'inserimento della recensione", error });
+        const userId = req.user.id;
+
+        const esameAggiornato =
+            await Esame.findByIdAndUpdate(
+                idEsame,
+                {
+                    $push: {
+                        recensioni: {
+                            userId,
+                            difficolta,
+                            tempo_di_studio_settimane,
+                            tempi_di_correzione,
+                            commento
+                        }
+                    }
+                },
+                {
+                    new: true,
+                    runValidators: true
+                }
+            );
+
+        if (!esameAggiornato) {
+            return res.status(404).json({
+                message: "Esame non trovato"
+            });
+        }
+
+        return res.status(200).json({
+            message: "Recensione inserita con successo",
+            esame: esameAggiornato
+        });
+    } catch {
+        return res.status(500).json({
+            message:
+                "Errore durante l'inserimento della recensione"
+        });
     }
 };
 

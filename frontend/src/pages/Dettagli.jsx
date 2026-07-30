@@ -1,12 +1,14 @@
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
+import Review from '../components/Review';
 import './Dettagli.css';
 
 export default function Dettagli() {
   const posizione = useLocation();
   const naviga = useNavigate();
 
-  const esame = posizione.state?.esame;
+  const esameRicevuto = posizione.state?.esame;
+  const [esame, setEsame] = useState(esameRicevuto);
 
   function tornaAllaHome() {
     naviga('/');
@@ -107,6 +109,10 @@ export default function Dettagli() {
               </article>
             ))
           )}
+          <Review
+            idEsame={esame._id}
+            aggiornaEsame={setEsame}
+          />
         </section>
       </div>
     </main>

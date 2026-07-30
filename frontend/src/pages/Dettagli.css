@@ -16,6 +16,7 @@
   color: #008f83;
   background: none;
   border: 1px solid #008f83;
+  border-radius: 6px;
   cursor: pointer;
 }
 
@@ -30,6 +31,7 @@
   padding: 16px;
   background-color: white;
   border: 1px solid #008f83;
+  border-radius: 8px;
 }
 
 .caratteristica p {
@@ -53,6 +55,7 @@
   margin-top: 12px;
   padding: 12px;
   border: 1px solid #cbd5e1;
+  border-radius: 6px;
 }
 
 .recensione p {
