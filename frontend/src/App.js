@@ -5,7 +5,7 @@ import LandingPage from './pages/Landing';
 import Dettagli from './pages/Dettagli';
 import Login from './pages/Login';
 import Navbar from './components/Navbar';
-
+import Registrazione from './pages/Registrazione';
 function App() {
   return (
     <>
@@ -25,6 +25,11 @@ function App() {
   <Route
     path="/login"
     element={<Login />}
+  />
+
+  <Route
+    path="/sign-up"
+    element={<Registrazione />}
   />
 </Routes>
     </>
