@@ -111,7 +111,7 @@ export default function Dettagli() {
           )}
           <Review
             idEsame={esame._id}
-            aggiornaEsame={setEsame}
+            setEsame={setEsame}
           />
         </section>
       </div>
